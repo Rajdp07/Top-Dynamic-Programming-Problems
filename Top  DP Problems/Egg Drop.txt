@@ -1,0 +1,39 @@
+class Solution {
+   int[][] memo;
+    public int superEggDrop(int K, int N) {
+        memo = new int[K+1][N+1];
+        for(int i = 0; i < memo.length; i++) {
+            for(int j = 0; j < memo[0].length; j++) {
+                memo[i][j] = -1;
+            }
+        }
+        int ans = helper(K,N);
+        return ans;
+    }
+    
+    public int helper(int K, int N) {
+        if(K <= 1 || N <= 1) {
+            return N;
+        }
+        
+        if(memo[K][N] != -1) {
+            return memo[K][N];
+        }
+        
+        int mn = Integer.MAX_VALUE;
+        int low = 1;
+        int high = N;
+        while(low < high) {
+            int mid = low+((high - low)/2);
+            int a = helper(K-1, mid-1);
+            int b = helper(K, N-mid);
+            int temp = 1 + Math.max(a, b);
+            mn = Math.min(mn, temp);
+            if (a == b) break;
+		    else if (a < b) low = mid + 1;
+		    else high = mid;
+        }
+        memo[K][N] = mn;
+        return mn;
+}
+}

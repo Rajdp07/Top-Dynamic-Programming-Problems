@@ -1,0 +1,48 @@
+Given two strings word1 and word2, return the minimum number of operations required to convert word1 to word2.
+
+You have the following three operations permitted on a word:
+
+Insert a character
+Delete a character
+Replace a character
+ 
+
+Example 1:
+
+Input: word1 = "horse", word2 = "ros"
+Output: 3
+Explanation: 
+horse -> rorse (replace 'h' with 'r')
+rorse -> rose (remove 'r')
+rose -> ros (remove 'e')
+---------------------------------------------------------------------------------------------------------------------------
+
+class Solution {
+     int [][] dp;
+    public int minDistance(String word1, String word2) {
+         if (word1 == null) return word2 == null ? 0 : word2.length();
+        if (word2 == null) return word1.length();
+        dp = new int[word1.length() + 1][word2.length() + 1];
+        for (int i = 0; i <= word1.length(); ++i) Arrays.fill(dp[i], -1);
+        return helper(word1, word2);
+    }
+     private int helper(String word1, String word2) {
+        int m = word1.length(), n = word2.length();
+        if (m == 0) return n;
+        if (n == 0) return m;
+        if (dp[m][n] != -1) return dp[m][n];
+        if (word1.charAt(0) == word2.charAt(0)) {
+            dp[m][n] = helper(word1.substring(1), word2.substring(1));
+            return dp[m][n];
+        }
+        dp[m][n] = 1 + min(helper(word1.substring(1), word2),                   //delete
+                           helper(word1, word2.substring(1)),                   //insert
+                           helper(word1.substring(1), word2.substring(1)));     //replace
+        return dp[m][n];
+    }
+    
+   private int min(int a, int b, int c) {
+      return Math.min(a, Math.min(b, c));
+    }
+        
+    }

@@ -1,0 +1,39 @@
+Given an integer array A of size N.
+
+You are also given an integer B, you need to find whether their exist a subset in A whose sum equal B.
+
+If there exist a subset then return 1 else return 0.
+
+
+Example Input
+Input 1:
+
+ A = [3, 34, 4, 12, 5, 2]
+ B = 9
+Input 2:
+
+ A = [3, 34, 4, 12, 5, 2]
+ B = 30
+---------------------------------------------------------------------------------------------------------------------------
+
+public class Solution {
+    public int solve(ArrayList<Integer> A, int B) {
+        int rows = A.size() + 1;
+        int columns = B+1;
+        int[][] table = new int[rows][columns];
+        for(int i=0; i<rows; i++){
+            table[i][0] = 1; // Making the first column of every row as 1
+        }
+        for(int i=1; i<rows; i++){
+            for(int j=1; j<columns; j++){
+                if(j < A.get(i-1)){
+                    table[i][j] = 0 | table[i-1][j];
+                }
+                else{
+                    table[i][j] = table[i-1][j] | table[i-1][j-A.get(i-1)];
+                }
+            }
+        }
+        return table[rows-1][columns-1];
+    }
+}
